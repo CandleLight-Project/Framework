@@ -12,12 +12,18 @@ define('CDL_VENDOR', CDL_ROOT . 'vendor' . DIRECTORY_SEPARATOR);
 require_once CDL_VENDOR . 'autoload.php';
 require_once CDL_APP . 'load.php';
 
-echo '<pre>';
+//echo '<pre>';
 
 $app = new App();
 $app->initDb(new Loader(CDL_CONFIG . "database.json"));
 $app->initTypes(new MultiLoader(CDL_TYPES . '*.json'));
+$app->load();
 
+//$post = $app->getTypes()['post'];
+//$route = new TypeRoute($post);
+//$route->apply();
+
+//print_r($route);
 
 //$post = $app->getTypes()['post'];
 //$test = $post([

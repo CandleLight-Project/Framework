@@ -26,4 +26,8 @@ class Type{
     public function __invoke(): Model{
         return $this->new();
     }
+
+    public function getSettings(): \stdClass{
+        return $this->settings;
+    }
 }
