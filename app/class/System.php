@@ -15,14 +15,20 @@ abstract class System{
      * @param \stdClass $settings
      * @return array the clean route array with the full route urls
      */
-    public static function getRoutes(\stdClass $settings){
+    public static function getRoutesFromSettings(\stdClass $settings){
         $routes = [];
         foreach ($settings->routing->routes as $method => $urls) {
             if (!isset($routes[$method])) {
                 $routes[$method] = [];
             }
             foreach ($urls as $url) {
-                array_push($routes[$method], $settings->routing->base . $url);
+                if (!is_array($url)){
+                    $url = [$url, '='];
+                }
+                array_push($routes[$method], [
+                    "url" => $settings->routing->base . $url[0],
+                    "operator" => $url[1]
+                ]);
             }
         }
         return $routes;
@@ -45,7 +51,7 @@ abstract class System{
                     '@type' => $name,
                     'title' => $type->title,
                     'description' => $type->description,
-                    'routes' => self::getRoutes($type)
+                    'routes' => self::getRoutesFromSettings($type)
                 ];
                 array_push($return, $list);
             }
@@ -53,8 +59,8 @@ abstract class System{
         }));
 
         // Show the public type configuration (hides the db fields)
-        $slim->get('/@types/{type}', self::jsonResponse(function ($req, $res, $args)  use ($types){
-            if (!isset($types[$args['type']])){
+        $slim->get('/@types/{type}', self::jsonResponse(function ($req, $res, $args) use ($types){
+            if (!isset($types[$args['type']])) {
                 return new Error(sprintf("Type '%s' is not defined.", $args['type']));
             }
             $settings = $types[$args['type']]->getSettings();

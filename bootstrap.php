@@ -18,6 +18,7 @@ $app = new App();
 $app->initDb(new Loader(CDL_CONFIG . "database.json"));
 $app->initTypes(new MultiLoader(CDL_TYPES . '*.json'));
 $app->load();
+$app->run();
 
 //$post = $app->getTypes()['post'];
 //$route = new TypeRoute($post);

@@ -11,7 +11,7 @@ use Slim\Http\Response;
 class Error{
     public $message;
     public $error;
-    public function __construct(string $message){
+    public function __construct($message){
         $this->message = $message;
         $this->error = true;
     }

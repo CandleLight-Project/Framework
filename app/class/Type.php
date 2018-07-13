@@ -4,6 +4,7 @@
 namespace CandleLight;
 
 use Illuminate\Database\Eloquent\Model;
+use Slim\App as Slim;
 
 
 class Type{
@@ -14,7 +15,14 @@ class Type{
 
     public function new(): Model{
         // Anonymous class instance
-        $model = new class extends Model{};
+        $model = new class extends Model{
+            public function doValidation(){
+                return false;
+            }
+            public function getValidationMessage(){
+                return '';
+            }
+        };
 
         // Set main data
         $model->setTable($this->settings->table);
@@ -29,5 +37,12 @@ class Type{
 
     public function getSettings(): \stdClass{
         return $this->settings;
+    }
+
+    public function applyRoutes(Slim $app){
+        $routes = System::getRoutesFromSettings($this->settings);
+        foreach ($routes as $method => $routes){
+            Dispatcher::run($method, $app, $this, $routes);
+        }
     }
 }

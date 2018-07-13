@@ -38,7 +38,7 @@ class App{
      * Loads the main routing framework and builds the application routes
      */
     public function load(): void{
-        $debug = true;
+        $debug = false;
         $this->app = new Slim([
             'settings' => [
                 'displayErrorDetails' => $debug
@@ -51,9 +51,22 @@ class App{
         $this->buildRoutes();
     }
 
+    /**
+     * Adds all routes to the System
+     */
     private function buildRoutes(){
         require_once 'System.php';
         System::reflectionRoutes($this, $this->app);
+        foreach ($this->types as $type){
+            /* @var $type Type */
+            $type->applyRoutes($this->app);
+        }
+    }
+
+    /**
+     * Starts the main application
+     */
+    public function run(){
         $this->app->run();
     }
 
