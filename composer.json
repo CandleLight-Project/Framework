@@ -1,0 +1,14 @@
+{
+    "name": "jsio/candlelight",
+    "description": "Headless API Generator",
+    "authors": [
+        {
+            "name": "Jannik Schäfer",
+            "email": "me@jschaefer.io"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "illuminate/database": "^5.6"
+    }
+}
