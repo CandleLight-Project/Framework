@@ -14,6 +14,8 @@ class App{
     private $types = [];
     private $app;
 
+    private $validations = [];
+
     /**
      * Prepares the database interaction
      * @param Loader $loader
@@ -42,7 +44,7 @@ class App{
      * Loads the main routing framework and builds the application routes
      */
     public function load(): void{
-        $debug = false;
+        $debug = true;
         $this->app = new Slim([
             'settings' => [
                 'displayErrorDetails' => $debug
@@ -63,7 +65,7 @@ class App{
         System::reflectionRoutes($this, $this->app);
         foreach ($this->types as $type) {
             /* @var $type Type */
-            $type->applyRoutes($this->app);
+            $type->applyRoutes($this, $this->app);
         }
     }
 
@@ -80,5 +82,33 @@ class App{
      */
     public function getTypes(): array{
         return $this->types;
+    }
+
+
+    /**
+     * Adds a new validation option to the application
+     * @param string $name validation name
+     * @param string $validation Validation class name
+     */
+    public function addValidation(string $name, string $validation): void{
+        $this->validations[$name] = $validation;
+    }
+
+    /**
+     * Returns the classname of the given validation option
+     * @param string $name validation name
+     * @return string Validation class name
+     */
+    public function getValidation(string $name): string{
+        return $this->validations[$name];
+    }
+
+    /**
+     * Checks if the validation with the given name exists
+     * @param string $name the validation name
+     * @return bool
+     */
+    public function hasValidation(string $name): bool{
+        return isset($this->validations[$name]);
     }
 }

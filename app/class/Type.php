@@ -80,12 +80,13 @@ class Type{
 
     /**
      * Adds the types routes to the given Slim instance
+     * @param App $cdl CDL Application instance
      * @param Slim $app Slim Framework intsance
      */
-    public function applyRoutes(Slim $app){
+    public function applyRoutes(App $cdl, Slim $app){
         $routes = System::getRoutesFromSettings($this->settings);
         foreach ($routes as $method => $routes) {
-            Dispatcher::run($method, $app, $this, $routes);
+            Dispatcher::run($cdl, $method, $app, $this, $routes);
         }
     }
 }
