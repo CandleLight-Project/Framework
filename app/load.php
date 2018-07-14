@@ -10,3 +10,4 @@ require_once 'class/System.php';
 require_once 'class/Dispatcher.php';
 require_once 'class/Model.php';
 require_once 'class/Validation.php';
+require_once 'class/DirProvider.php';
