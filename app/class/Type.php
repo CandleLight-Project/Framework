@@ -14,8 +14,7 @@ class Type{
     }
 
     public function new(): Model{
-        // Anonymous class instance
-        $model = new class extends Model{
+        return new class extends Model{
             public function doValidation(){
                 return false;
             }
@@ -23,11 +22,11 @@ class Type{
                 return '';
             }
         };
+    }
 
-        // Set main data
+    public function applyTypeData(Model $model): Model{
         $model->setTable($this->settings->table);
         $model->setConnection($this->settings->connection);
-
         return $model;
     }
 

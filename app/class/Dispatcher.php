@@ -12,11 +12,13 @@ abstract class Dispatcher{
     public static function run(string $method, Slim $app, Type $type, array $routes){
         switch ($method) {
             case 'delete':
+                self::Delete($app, $type, $routes);
                 break;
             case 'post':
                 self::Post($app, $type, $routes);
                 break;
             case 'put':
+                self::Put($app, $type, $routes);
                 break;
             default:
                 self::Get($app, $type, $routes);
@@ -27,11 +29,16 @@ abstract class Dispatcher{
     private static function Get(Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->get($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
-                $type = $type->new();
+                $query = $type->applyTypeData($type->new());
                 foreach ($args as $key => $value) {
-                    $type = $type->where($key, $route['operator'], $value);
+                    $query = $query->where($key, $route['operator'], $value);
                 }
-                return $type->get()->toArray();
+                if ($route['firstOrFail']){
+                    return $query->firstOrFail()->toArray();
+                }
+                else{
+                    return $query->get()->toArray();
+                }
             }));
         }
     }
@@ -39,15 +46,51 @@ abstract class Dispatcher{
     private static function Post(Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->post($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
-                $type = $type->new();
+                $query = $type->applyTypeData($type->new());
                 foreach ($request->getParams() as $key => $value){
-                    $type->{$key} = $value;
+                    $query->{$key} = $value;
                 }
-                if ($type->doValidation()){
-                    return new Error($type->getValidationMessage());
+                if ($query->doValidation()){
+                    return new Error($query->getValidationMessage());
                 }
-                $type->save();
-                return $type;
+                $query->save();
+                return $query;
+            }));
+        }
+    }
+
+    private static function Put(Slim $app, Type $type, array $routes): void{
+        foreach ($routes as $route){
+            $app->put($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
+                $query = $type->applyTypeData($type->new());
+                foreach ($args as $key => $value) {
+                    $query = $query->where($key, $route['operator'], $value);
+                }
+                $query = $query->firstOrFail();
+                foreach ($request->getParams() as $key => $value){
+                    $query->{$key} = $value;
+                }
+                if ($query->doValidation()){
+                    return new Error($query->getValidationMessage());
+                }
+                $type->applyTypeData($query);
+                $query->update();
+                return $query;
+            }));
+        }
+    }
+
+    private static function Delete(Slim $app, Type $type, array $routes): void{
+        foreach ($routes as $route){
+            $app->delete($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
+                $query = $type->applyTypeData($type->new());
+                foreach ($args as $key => $value) {
+                    $query = $query->where($key, $route['operator'], $value);
+                }
+                $query = $query->firstOrFail();
+                $type->applyTypeData($query);
+                $query->delete();
+                return $query;
             }));
         }
     }

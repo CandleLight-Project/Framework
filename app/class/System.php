@@ -23,11 +23,12 @@ abstract class System{
             }
             foreach ($urls as $url) {
                 if (!is_array($url)){
-                    $url = [$url, '='];
+                    $url = [$url, '=', false];
                 }
                 array_push($routes[$method], [
                     "url" => $settings->routing->base . $url[0],
-                    "operator" => $url[1]
+                    "operator" => $url[1],
+                    "firstOrFail" => $url[2]
                 ]);
             }
         }
