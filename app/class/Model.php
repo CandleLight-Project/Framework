@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 abstract class Model extends Eloquent{
 
 
-
     public function doValidation(): bool{
         return false;
     }
+
     public function getValidationMessage(): string{
         return '';
     }

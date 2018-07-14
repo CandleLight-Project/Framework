@@ -5,16 +5,28 @@ namespace CandleLight;
 
 use Slim\App as Slim;
 
-
+/**
+ * General Type provider
+ * @package CandleLight
+ */
 class Type{
+
     private $settings;
     private $model;
 
-    public function __construct($settings){
+    /**
+     * Builds up the type from the given settings object
+     * @param \stdClass $settings settings object provided by the type.json
+     */
+    public function __construct(\stdClass $settings){
         $this->settings = $settings;
         $this->model = $this->buildModel();
     }
 
+    /**
+     * Generates the types model class
+     * @return string The class-name
+     */
     private function buildModel(): string{
         $class = get_class(new class extends Model{
 
@@ -42,18 +54,34 @@ class Type{
         return $class;
     }
 
+    /**
+     * Gets an instance of the current type model
+     * @return Model
+     */
     public function new(): Model{
         return new $this->model;
     }
 
+    /**
+     * Gets an intsance of the current type model
+     * @return Model
+     */
     public function __invoke(): Model{
         return $this->new();
     }
 
+    /**
+     * Returns the types settings object
+     * @return \stdClass
+     */
     public function getSettings(): \stdClass{
         return $this->settings;
     }
 
+    /**
+     * Adds the types routes to the given Slim instance
+     * @param Slim $app Slim Framework intsance
+     */
     public function applyRoutes(Slim $app){
         $routes = System::getRoutesFromSettings($this->settings);
         foreach ($routes as $method => $routes) {

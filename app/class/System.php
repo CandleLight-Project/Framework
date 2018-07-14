@@ -8,6 +8,10 @@ use Slim\App as Slim;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+/**
+ * System API Helpers
+ * @package CandleLight
+ */
 abstract class System{
 
     /**
@@ -15,14 +19,14 @@ abstract class System{
      * @param \stdClass $settings
      * @return array the clean route array with the full route urls
      */
-    public static function getRoutesFromSettings(\stdClass $settings){
+    public static function getRoutesFromSettings(\stdClass $settings): array{
         $routes = [];
         foreach ($settings->routing->routes as $method => $urls) {
             if (!isset($routes[$method])) {
                 $routes[$method] = [];
             }
             foreach ($urls as $url) {
-                if (!is_array($url)){
+                if (!is_array($url)) {
                     $url = [$url, '=', false];
                 }
                 array_push($routes[$method], [
@@ -40,7 +44,7 @@ abstract class System{
      * @param App $app
      * @param Slim $slim
      */
-    public static function reflectionRoutes(App $app, Slim $slim){
+    public static function reflectionRoutes(App $app, Slim $slim): void{
         $types = $app->getTypes();
 
         // List all Types with the full route

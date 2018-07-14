@@ -4,6 +4,10 @@ namespace CandleLight;
 
 use Slim\App as Slim;
 
+/**
+ * Main Application Class
+ * @package CandleLight
+ */
 class App{
 
     private $db;
@@ -54,10 +58,10 @@ class App{
     /**
      * Adds all routes to the System
      */
-    private function buildRoutes(){
+    private function buildRoutes(): void{
         require_once 'System.php';
         System::reflectionRoutes($this, $this->app);
-        foreach ($this->types as $type){
+        foreach ($this->types as $type) {
             /* @var $type Type */
             $type->applyRoutes($this->app);
         }
@@ -66,7 +70,7 @@ class App{
     /**
      * Starts the main application
      */
-    public function run(){
+    public function run(): void{
         $this->app->run();
     }
 

@@ -32,7 +32,7 @@ class Database{
      * @param string $name the connection name
      */
     public function addConnection(\stdClass $settings, string $name): void{
-        $this->capsule->addConnection((array) $settings, $name);
+        $this->capsule->addConnection((array)$settings, $name);
     }
 
 }
