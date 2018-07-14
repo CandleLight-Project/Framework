@@ -46,7 +46,7 @@ class App{
         ]);
         if (!$debug) {
             require_once 'Error.php';
-            Error::handleErrors($this->app);
+            Error::registerSystemErrors($this->app);
         }
         $this->buildRoutes();
     }

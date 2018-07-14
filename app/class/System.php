@@ -51,21 +51,21 @@ abstract class System{
                 $list = [
                     '@type' => $name,
                     'title' => $type->title,
-                    'description' => $type->description,
-                    'routes' => self::getRoutesFromSettings($type)
+                    'description' => $type->description
                 ];
                 array_push($return, $list);
             }
             return $return;
         }));
 
-        // Show the public type configuration (hides the db fields)
+        // Show the public type configuration
         $slim->get('/@types/{type}', self::jsonResponse(function ($req, $res, $args) use ($types){
             if (!isset($types[$args['type']])) {
                 return new Error(sprintf("Type '%s' is not defined.", $args['type']));
             }
             $settings = $types[$args['type']]->getSettings();
-            unset($settings->fields);
+            $settings->routes = self::getRoutesFromSettings($settings);
+            unset($settings->routing);
             return $settings;
         }));
     }

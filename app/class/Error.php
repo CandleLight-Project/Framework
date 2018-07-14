@@ -19,7 +19,7 @@ class Error{
     /**
      * Injects a custom error handling into the slim-framework
      */
-    public static function handleErrors(Slim $app): void{
+    public static function registerSystemErrors(Slim $app): void{
         /** @var Container $c */
         $c = $app->getContainer();
         // Exception Handler
