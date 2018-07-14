@@ -9,3 +9,4 @@ require_once 'class/Route.php';
 require_once 'class/Error.php';
 require_once 'class/System.php';
 require_once 'class/Dispatcher.php';
+require_once 'class/Model.php';

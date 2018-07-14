@@ -29,7 +29,7 @@ abstract class Dispatcher{
     private static function Get(Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->get($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
-                $query = $type->applyTypeData($type->new());
+                $query = $type->new();
                 foreach ($args as $key => $value) {
                     $query = $query->where($key, $route['operator'], $value);
                 }
@@ -46,7 +46,7 @@ abstract class Dispatcher{
     private static function Post(Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->post($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
-                $query = $type->applyTypeData($type->new());
+                $query = $type->new();
                 foreach ($request->getParams() as $key => $value){
                     $query->{$key} = $value;
                 }
@@ -62,7 +62,7 @@ abstract class Dispatcher{
     private static function Put(Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route){
             $app->put($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
-                $query = $type->applyTypeData($type->new());
+                $query = $type->new();
                 foreach ($args as $key => $value) {
                     $query = $query->where($key, $route['operator'], $value);
                 }
@@ -73,7 +73,6 @@ abstract class Dispatcher{
                 if ($query->doValidation()){
                     return new Error($query->getValidationMessage());
                 }
-                $type->applyTypeData($query);
                 $query->update();
                 return $query;
             }));
@@ -83,12 +82,11 @@ abstract class Dispatcher{
     private static function Delete(Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route){
             $app->delete($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($type, $route){
-                $query = $type->applyTypeData($type->new());
+                $query = $type->new();
                 foreach ($args as $key => $value) {
                     $query = $query->where($key, $route['operator'], $value);
                 }
                 $query = $query->firstOrFail();
-                $type->applyTypeData($query);
                 $query->delete();
                 return $query;
             }));
