@@ -51,6 +51,7 @@ abstract class Dispatcher{
     private static function Get(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->get($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+                /* @var $query Model */
                 $query = $type->new();
                 foreach ($args as $key => $value) {
                     $query = $query->where($key, $route['operator'], $value);
@@ -74,10 +75,12 @@ abstract class Dispatcher{
     private static function Post(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->post($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+                /* @var $query Model */
                 $query = $type->new();
                 foreach ($request->getParams() as $key => $value) {
                     $query->{$key} = $value;
                 }
+                $query->applyCalculators($cdl, $type->getSettings());
                 if ($query->doValidation($cdl, $type->getSettings())) {
                     return new Error($query->getValidationMessage());
                 }
@@ -97,6 +100,7 @@ abstract class Dispatcher{
     private static function Put(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->put($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+                /* @var $query Model */
                 $query = $type->new();
                 foreach ($args as $key => $value) {
                     $query = $query->where($key, $route['operator'], $value);
@@ -105,6 +109,7 @@ abstract class Dispatcher{
                 foreach ($request->getParams() as $key => $value) {
                     $query->{$key} = $value;
                 }
+                $query->applyCalculators($cdl, $type->getSettings());
                 if ($query->doValidation($cdl, $type->getSettings())) {
                     return new Error($query->getValidationMessage());
                 }
@@ -124,6 +129,7 @@ abstract class Dispatcher{
     private static function Delete(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
             $app->delete($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+                /* @var $query Model */
                 $query = $type->new();
                 foreach ($args as $key => $value) {
                     $query = $query->where($key, $route['operator'], $value);

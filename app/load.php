@@ -9,5 +9,8 @@ require_once 'class/Error.php';
 require_once 'class/System.php';
 require_once 'class/Dispatcher.php';
 require_once 'class/Model.php';
-require_once 'class/Validation.php';
 require_once 'class/DirProvider.php';
+
+require_once 'class/PlugIn.php';
+require_once 'class/Validation.php';
+require_once 'class/Calculator.php';

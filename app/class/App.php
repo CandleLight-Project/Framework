@@ -15,6 +15,7 @@ class App{
     private $app;
 
     private $validations = [];
+    private $calulators = [];
 
     /**
      * Prepares the database interaction
@@ -104,11 +105,38 @@ class App{
     }
 
     /**
-     * Checks if the validation with the given name exists
+     * Checks if the calculator with the given name exists
      * @param string $name the validation name
      * @return bool
      */
     public function hasValidation(string $name): bool{
         return isset($this->validations[$name]);
+    }
+
+    /**
+     * Adds a new calculator option to the application
+     * @param string $name calculator name
+     * @param string $validation Validation class name
+     */
+    public function addCalculator(string $name, string $validation): void{
+        $this->calulators[$name] = $validation;
+    }
+
+    /**
+     * Returns the classname of the given calculator option
+     * @param string $name calculator name
+     * @return string Calculator class name
+     */
+    public function getCalculator(string $name): string{
+        return $this->calulators[$name];
+    }
+
+    /**
+     * Checks if the calculator with the given name exists
+     * @param string $name the calculator name
+     * @return bool
+     */
+    public function hasCalculator(string $name): bool{
+        return isset($this->calulators[$name]);
     }
 }

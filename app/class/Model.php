@@ -13,6 +13,30 @@ abstract class Model extends Eloquent{
 
     private $validations = [];
 
+    public function applyCalculators(App $cdl, \stdClass $settings): void{
+        foreach ($settings->fields as $field) {
+            if (!isset($field->calculations)) {
+                continue;
+            }
+            foreach ($field->calculations as $calculation) {
+                if (!is_object($calculation)) {
+                    $calculation = [
+                        'name' => $calculation,
+                        'values' => []
+                    ];
+                } else {
+                    $calculation = (array)$calculation;
+                }
+                if ($cdl->hasCalculator($calculation['name'])) {
+                    $calcObject = $cdl->getCalculator($calculation['name']);
+                    /* @var $calc Calculator */
+                    $calc = new $calcObject($this, $field->name, $calculation['values']);
+                    $calc->apply();
+                }
+            }
+        }
+    }
+
     /**
      * Executes all validations for this model
      * @param App $cdl CDL application instance
@@ -20,7 +44,6 @@ abstract class Model extends Eloquent{
      * @return bool true on error
      */
     public function doValidation(App $cdl, \stdClass $settings): bool{
-
         foreach ($settings->fields as $field) {
             // Skip fields without validation
             if (!isset($field->validation)) {
