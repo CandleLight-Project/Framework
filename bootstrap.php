@@ -19,16 +19,16 @@ require_once CDL_APP . 'load.php';
 // Initialize Application
 $app = new App();
 
-// Prepare Application
-$app->initDb(new Loader(CDL_CONFIG . "database.json"));
-$app->initTypes(new MultiLoader(CDL_TYPES . '*.json'));
-$app->load();
-
 // Load plugins and extensions
 DirProvider::glob(CDL_VALIDATIONS . '*.php', 0, ['app'=>$app]);     // Load Validations
 DirProvider::glob(CDL_CALCULATORS . '*.php', 0, ['app'=>$app]);     // Load Calculators
 DirProvider::glob(CDL_FILTERS . '*.php', 0, ['app'=>$app]);         // Load Filters
 DirProvider::glob(CDL_MIDDLEWARES . '*.php', 0, ['app'=>$app]);     // Load Middlewares
+
+// Prepare Application
+$app->initDb(new Loader(CDL_CONFIG . "database.json"));
+$app->initTypes(new MultiLoader(CDL_TYPES . '*.json'));
+$app->load();
 
 // Start Applications
 $app->run();

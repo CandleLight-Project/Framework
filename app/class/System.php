@@ -21,19 +21,12 @@ abstract class System{
      */
     public static function getRoutesFromSettings(\stdClass $settings): array{
         $routes = [];
-        foreach ($settings->routing->routes as $method => $urls) {
+        foreach ($settings->routing as $method => $urls) {
             if (!isset($routes[$method])) {
                 $routes[$method] = [];
             }
             foreach ($urls as $url) {
-                if (!is_array($url)) {
-                    $url = [$url, '=', false];
-                }
-                array_push($routes[$method], [
-                    "url" => $settings->routing->base . $url[0],
-                    "operator" => $url[1],
-                    "firstOrFail" => $url[2]
-                ]);
+                array_push($routes[$method], (array)$url);
             }
         }
         return $routes;

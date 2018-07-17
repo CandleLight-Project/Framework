@@ -6,6 +6,7 @@ namespace CandleLight;
 use \Slim\App as Slim;
 use \Slim\Http\Request as Request;
 use \Slim\Http\Response as Response;
+use Slim\Route;
 
 
 /**
@@ -41,6 +42,17 @@ abstract class Dispatcher{
         }
     }
 
+    private static function applyMiddleware(App $cdl, array $settings, Route $route): void{
+        if (isset($settings['middlewares']) && !empty($settings['middlewares'])){
+            foreach ($settings['middlewares'] as $middleware){
+                if ($cdl->hasMiddleware($middleware)){
+                    $middleware = $cdl->getMiddleware($middleware);
+                    $route->add($middleware::getInstance());
+                }
+            }
+        }
+    }
+
     /**
      * Registers all default GET-Routes
      * @param App $cdl CDL Application instance
@@ -50,18 +62,19 @@ abstract class Dispatcher{
      */
     private static function Get(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
-            $app->get($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+            $routing = $app->get($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
                 /* @var $query Model */
                 $query = $type->new();
                 foreach ($args as $key => $value) {
                     $query = $query->where($key, $route['operator'], $value);
                 }
-                if ($route['firstOrFail']) {
+                if (isset($route['firstOrFail']) && $route['firstOrFail']) {
                     return $query->firstOrFail()->toArray();
                 } else {
                     return $query->get()->toArray();
                 }
             }));
+            self::applyMiddleware($cdl, $route, $routing);
         }
     }
 
@@ -74,7 +87,7 @@ abstract class Dispatcher{
      */
     private static function Post(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
-            $app->post($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+            $routing = $app->post($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
                 /* @var $query Model */
                 $query = $type->new();
                 foreach ($request->getParams() as $key => $value) {
@@ -88,6 +101,7 @@ abstract class Dispatcher{
                 $query->save();
                 return $query;
             }));
+            self::applyMiddleware($cdl, $route, $routing);
         }
     }
 
@@ -100,7 +114,7 @@ abstract class Dispatcher{
      */
     private static function Put(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
-            $app->put($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+            $routing = $app->put($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
                 /* @var $query Model */
                 $query = $type->new();
                 foreach ($args as $key => $value) {
@@ -118,6 +132,7 @@ abstract class Dispatcher{
                 $query->update();
                 return $query;
             }));
+            self::applyMiddleware($cdl, $route, $routing);
         }
     }
 
@@ -130,7 +145,7 @@ abstract class Dispatcher{
      */
     private static function Delete(App $cdl, Slim $app, Type $type, array $routes): void{
         foreach ($routes as $route) {
-            $app->delete($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
+            $routing = $app->delete($route['url'], System::jsonResponse(function (Request $request, Response $response, array $args) use ($cdl, $type, $route){
                 /* @var $query Model */
                 $query = $type->new();
                 foreach ($args as $key => $value) {
@@ -140,6 +155,7 @@ abstract class Dispatcher{
                 $query->delete();
                 return $query;
             }));
+            self::applyMiddleware($cdl, $route, $routing);
         }
     }
 }

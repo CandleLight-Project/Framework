@@ -17,6 +17,7 @@ class App{
     private $validations = [];
     private $calulators = [];
     private $filters = [];
+    private $middlewares = [];
 
     /**
      * Prepares the database interaction
@@ -123,7 +124,7 @@ class App{
     /**
      * Adds a new calculator option to the application
      * @param string $name calculator name
-     * @param string $validation Validation class name
+     * @param string $validation Calculator class name
      */
     public function addCalculator(string $name, string $validation): void{
         $this->calulators[$name] = $validation;
@@ -153,10 +154,10 @@ class App{
     /**
      * Adds a new Filter option to the application
      * @param string $name Filter name
-     * @param string $filter Validation class name
+     * @param string $filter Filter class name
      */
     public function addFilter(string $name, string $filter): void{
-        $this->calulators[$name] = $filter;
+        $this->filters[$name] = $filter;
     }
 
     /**
@@ -165,7 +166,7 @@ class App{
      * @return string Filter class name
      */
     public function getFilter(string $name): string{
-        return $this->calulators[$name];
+        return $this->filters[$name];
     }
 
     /**
@@ -174,6 +175,35 @@ class App{
      * @return bool
      */
     public function hasFilter(string $name): bool{
-        return isset($this->calulators[$name]);
+        return isset($this->filters[$name]);
+    }
+
+
+
+    /**
+     * Adds a new Middleware option to the application
+     * @param string $name Middleware name
+     * @param string $middleware Middleware class name
+     */
+    public function addMiddleware(string $name, string $middleware): void{
+        $this->middlewares[$name] = $middleware;
+    }
+
+    /**
+     * Returns the classname of the given Middleware option
+     * @param string $name Middleware name
+     * @return string Middleware class name
+     */
+    public function getMiddleware(string $name): string{
+        return $this->middlewares[$name];
+    }
+
+    /**
+     * Checks if the Middleware with the given name exists
+     * @param string $name the Middleware name
+     * @return bool
+     */
+    public function hasMiddleware(string $name): bool{
+        return isset($this->middlewares[$name]);
     }
 }
