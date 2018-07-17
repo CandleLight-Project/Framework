@@ -16,7 +16,8 @@ class SerializeField extends Calculator{
     }
 
     private function serialize(string $field): string{
-        return md5($field);
+        $field = urlencode($field);
+        return $field;
     }
 }
 

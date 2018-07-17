@@ -81,6 +81,7 @@ abstract class Dispatcher{
                     $query->{$key} = $value;
                 }
                 $query->applyCalculators($cdl, $type->getSettings());
+                $query->applyFilters($cdl, $type->getSettings());
                 if ($query->doValidation($cdl, $type->getSettings())) {
                     return new Error($query->getValidationMessage());
                 }
@@ -110,6 +111,7 @@ abstract class Dispatcher{
                     $query->{$key} = $value;
                 }
                 $query->applyCalculators($cdl, $type->getSettings());
+                $query->applyFilters($cdl, $type->getSettings());
                 if ($query->doValidation($cdl, $type->getSettings())) {
                     return new Error($query->getValidationMessage());
                 }

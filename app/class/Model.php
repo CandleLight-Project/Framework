@@ -13,6 +13,30 @@ abstract class Model extends Eloquent{
 
     private $validations = [];
 
+    public function applyFilters(App $cdl, \stdClass $settings): void{
+        foreach ($settings->fields as $field) {
+            if (!isset($field->filters)) {
+                continue;
+            }
+            foreach ($field->filters as $filter) {
+                if (!is_object($filter)) {
+                    $filter = [
+                        'name' => $filter,
+                        'values' => []
+                    ];
+                } else {
+                    $filter = (array)$filter;
+                }
+                if ($cdl->hasFilter($filter['name'])) {
+                    $filterObject = $cdl->getFilter($filter['name']);
+                    /* @var $filt Filter */
+                    $filt = new $filterObject($this, $field->name, $filter['values']);
+                    $filt->apply();
+                }
+            }
+        }
+    }
+
     public function applyCalculators(App $cdl, \stdClass $settings): void{
         foreach ($settings->fields as $field) {
             if (!isset($field->calculations)) {

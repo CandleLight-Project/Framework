@@ -16,6 +16,7 @@ class App{
 
     private $validations = [];
     private $calulators = [];
+    private $filters = [];
 
     /**
      * Prepares the database interaction
@@ -86,6 +87,8 @@ class App{
     }
 
 
+
+
     /**
      * Adds a new validation option to the application
      * @param string $name validation name
@@ -113,6 +116,10 @@ class App{
         return isset($this->validations[$name]);
     }
 
+
+
+
+
     /**
      * Adds a new calculator option to the application
      * @param string $name calculator name
@@ -137,6 +144,36 @@ class App{
      * @return bool
      */
     public function hasCalculator(string $name): bool{
+        return isset($this->calulators[$name]);
+    }
+
+
+
+
+    /**
+     * Adds a new Filter option to the application
+     * @param string $name Filter name
+     * @param string $filter Validation class name
+     */
+    public function addFilter(string $name, string $filter): void{
+        $this->calulators[$name] = $filter;
+    }
+
+    /**
+     * Returns the classname of the given Filter option
+     * @param string $name Filter name
+     * @return string Filter class name
+     */
+    public function getFilter(string $name): string{
+        return $this->calulators[$name];
+    }
+
+    /**
+     * Checks if the Filter with the given name exists
+     * @param string $name the Filter name
+     * @return bool
+     */
+    public function hasFilter(string $name): bool{
         return isset($this->calulators[$name]);
     }
 }

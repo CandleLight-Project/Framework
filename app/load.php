@@ -14,3 +14,4 @@ require_once 'class/DirProvider.php';
 require_once 'class/PlugIn.php';
 require_once 'class/Validation.php';
 require_once 'class/Calculator.php';
+require_once 'class/Filter.php';
