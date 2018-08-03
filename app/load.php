@@ -16,3 +16,4 @@ require_once 'class/Validation.php';
 require_once 'class/Calculator.php';
 require_once 'class/Filter.php';
 require_once 'class/Middleware.php';
+require_once 'class/Route.php';

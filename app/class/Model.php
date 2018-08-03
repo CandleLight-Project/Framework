@@ -13,6 +13,11 @@ abstract class Model extends Eloquent{
 
     private $validations = [];
 
+    /**
+     * Applies the filters to the fields
+     * @param App $cdl CDL Application instance
+     * @param \stdClass $settings field settings
+     */
     public function applyFilters(App $cdl, \stdClass $settings): void{
         foreach ($settings->fields as $field) {
             if (!isset($field->filters)) {
@@ -37,6 +42,11 @@ abstract class Model extends Eloquent{
         }
     }
 
+    /**
+     * Applies the calculators to the fields
+     * @param App $cdl CDL Application instance
+     * @param \stdClass $settings field settings
+     */
     public function applyCalculators(App $cdl, \stdClass $settings): void{
         foreach ($settings->fields as $field) {
             if (!isset($field->calculations)) {

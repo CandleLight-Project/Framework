@@ -15,9 +15,10 @@ class App{
     private $app;
 
     private $validations = [];
-    private $calulators = [];
+    private $calculators = [];
     private $filters = [];
-    private $middlewares = [];
+    private $middleware = [];
+    private $routes = [];
 
     /**
      * Prepares the database interaction
@@ -127,7 +128,7 @@ class App{
      * @param string $validation Calculator class name
      */
     public function addCalculator(string $name, string $validation): void{
-        $this->calulators[$name] = $validation;
+        $this->calculators[$name] = $validation;
     }
 
     /**
@@ -136,7 +137,7 @@ class App{
      * @return string Calculator class name
      */
     public function getCalculator(string $name): string{
-        return $this->calulators[$name];
+        return $this->calculators[$name];
     }
 
     /**
@@ -145,7 +146,7 @@ class App{
      * @return bool
      */
     public function hasCalculator(string $name): bool{
-        return isset($this->calulators[$name]);
+        return isset($this->calculators[$name]);
     }
 
 
@@ -186,7 +187,7 @@ class App{
      * @param string $middleware Middleware class name
      */
     public function addMiddleware(string $name, string $middleware): void{
-        $this->middlewares[$name] = $middleware;
+        $this->middleware[$name] = $middleware;
     }
 
     /**
@@ -195,7 +196,7 @@ class App{
      * @return string Middleware class name
      */
     public function getMiddleware(string $name): string{
-        return $this->middlewares[$name];
+        return $this->middleware[$name];
     }
 
     /**
@@ -204,6 +205,58 @@ class App{
      * @return bool
      */
     public function hasMiddleware(string $name): bool{
-        return isset($this->middlewares[$name]);
+        return isset($this->middleware[$name]);
+    }
+
+
+    /**
+     * Adds a new Route option to the application
+     * @param string $type Route HTTP-Request type
+     * @param string $name Route name
+     * @param string $route Route class name
+     */
+    public function addRoute(string $type, string $name, string $route): void{
+        if (!isset($this->routes[$name])){
+            $this->routes[$name] = [];
+        }
+        $this->routes[$name][$type] = $route;
+    }
+
+    /**
+     * Returns the classname of the given Route option
+     * @param string $name Route name
+     * @return array List of routes associated with this name
+     */
+    public function getRoutes(string $name): array{
+        return $this->routes[$name];
+    }
+
+    /**
+     * Returns the classname of the given Route option
+     * @param string $type HTTP Request Type
+     * @param string $name Route name
+     * @return string Route class name
+     */
+    public function getRoute(string $type, string $name): string{
+        return $this->routes[$name][$type];
+    }
+
+    /**
+     * Checks if the Route with the given name exists
+     * @param string $name the Route name
+     * @return bool
+     */
+    public function hasRoutes(string $name): bool{
+        return (isset($this->routes[$name]) && !empty($this->routes[$name]));
+    }
+
+    /**
+     * Checks if the Route with the given name exists
+     * @param string $type HTTP Request Type
+     * @param string $name the Route name
+     * @return bool
+     */
+    public function hasRoute(string $type, string $name): bool{
+        return (isset($this->routes[$name]) && isset($this->routes[$name][$type]));
     }
 }

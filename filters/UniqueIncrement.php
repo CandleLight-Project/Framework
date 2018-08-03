@@ -7,7 +7,7 @@ use CandleLight\Filter;
 class UniqueIncrement extends Filter{
     private $increment = 0;
 
-    public function apply(){
+    public function apply(): void{
         $model = $this->getModel();
         $field = $this->getField();
         $value = $model->{$field};

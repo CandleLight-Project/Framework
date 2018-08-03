@@ -11,7 +11,9 @@ use Slim\App as Slim;
  */
 class Type{
 
+    /* @var \stdClass */
     private $settings;
+    /* @var Model */
     private $model;
 
     /**

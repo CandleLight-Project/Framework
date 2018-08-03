@@ -7,5 +7,5 @@ namespace CandleLight;
  * @package CandleLight
  */
 abstract class Filter extends PlugIn{
-    abstract public function apply();
+    abstract public function apply(): void;
 }
