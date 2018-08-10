@@ -48,7 +48,7 @@ class App{
      * Loads the main routing framework and builds the application routes
      */
     public function load(): void{
-        $debug = true;
+        $debug = false;
         $this->app = new Slim([
             'settings' => [
                 'displayErrorDetails' => $debug
@@ -89,8 +89,6 @@ class App{
     }
 
 
-
-
     /**
      * Adds a new validation option to the application
      * @param string $name validation name
@@ -117,9 +115,6 @@ class App{
     public function hasValidation(string $name): bool{
         return isset($this->validations[$name]);
     }
-
-
-
 
 
     /**
@@ -150,8 +145,6 @@ class App{
     }
 
 
-
-
     /**
      * Adds a new Filter option to the application
      * @param string $name Filter name
@@ -178,7 +171,6 @@ class App{
     public function hasFilter(string $name): bool{
         return isset($this->filters[$name]);
     }
-
 
 
     /**
@@ -216,7 +208,7 @@ class App{
      * @param string $route Route class name
      */
     public function addRoute(string $type, string $name, string $route): void{
-        if (!isset($this->routes[$name])){
+        if (!isset($this->routes[$name])) {
             $this->routes[$name] = [];
         }
         $this->routes[$name][$type] = $route;

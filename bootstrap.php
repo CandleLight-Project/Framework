@@ -21,11 +21,11 @@ require_once CDL_APP . 'load.php';
 $app = new App();
 
 // Load plugins and extensions
-DirProvider::glob(CDL_VALIDATIONS . '*.php', 0, ['app'=>$app]);     // Load Validations
-DirProvider::glob(CDL_CALCULATORS . '*.php', 0, ['app'=>$app]);     // Load Calculators
-DirProvider::glob(CDL_FILTERS . '*.php', 0, ['app'=>$app]);         // Load Filters
-DirProvider::glob(CDL_MIDDLEWARE . '*.php', 0, ['app'=>$app]);     // Load Middleware
-DirProvider::glob(CDL_ACTIONS . '*.php', 0, ['app'=>$app]);          // Load Custom Routes
+DirProvider::glob(CDL_VALIDATIONS . '*.php', 0, ['app' => $app]);     // Load Validations
+DirProvider::glob(CDL_CALCULATORS . '*.php', 0, ['app' => $app]);     // Load Calculators
+DirProvider::glob(CDL_FILTERS . '*.php', 0, ['app' => $app]);         // Load Filters
+DirProvider::glob(CDL_MIDDLEWARE . '*.php', 0, ['app' => $app]);     // Load Middleware
+DirProvider::glob(CDL_ACTIONS . '*.php', 0, ['app' => $app]);          // Load Custom Routes
 
 // Prepare Application
 $app->initDb(new Loader(CDL_CONFIG . "database.json"));

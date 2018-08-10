@@ -18,7 +18,7 @@ abstract class DirProvider{
     public static function glob(string $pattern, int $flag = 0, array $data = []){
         $paths = glob($pattern, $flag);
         extract($data);
-        foreach ($paths as $path){
+        foreach ($paths as $path) {
             require($path);
         }
     }

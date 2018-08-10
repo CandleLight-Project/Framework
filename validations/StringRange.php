@@ -13,10 +13,10 @@ class StringRange extends Validation{
     protected function validate(): bool{
         $field = $this->getModel()->{$this->getField()};
         $values = $this->getValues();
-        if (strlen($field) < $values[0]){
+        if (strlen($field) < $values[0]) {
             return true;
         }
-        if (isset($values[1]) && strlen($field) > $values[1]){
+        if (isset($values[1]) && strlen($field) > $values[1]) {
             return true;
         }
         return false;

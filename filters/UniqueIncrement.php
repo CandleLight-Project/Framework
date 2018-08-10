@@ -13,12 +13,12 @@ class UniqueIncrement extends Filter{
         $value = $model->{$field};
 
         $found = false;
-        while(!$found){
+        while (!$found) {
             $found = true;
             $query = $model->newInstance();
-            $query = $query->where($field, $value. $this->getIncrementString())->get()->toArray();
-            foreach ($query as $compare){
-                if ($compare['id'] != $model->id){
+            $query = $query->where($field, $value . $this->getIncrementString())->get()->toArray();
+            foreach ($query as $compare) {
+                if ($compare['id'] != $model->id) {
                     $this->increment++;
                     $found = false;
                     break;
@@ -29,7 +29,7 @@ class UniqueIncrement extends Filter{
     }
 
     private function getIncrementString(): string{
-        if ($this->increment === 0){
+        if ($this->increment === 0) {
             return '';
         }
         return sprintf('-%d', $this->increment);

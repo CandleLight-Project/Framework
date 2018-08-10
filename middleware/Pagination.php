@@ -40,7 +40,7 @@ class Pagination extends Middleware{
         if ($page <= 0) {
             return $this->errorPage($response);
         }
-        if (!is_array($data)){
+        if (!is_array($data)) {
             return $this->errorContent($response);
         }
 
@@ -57,13 +57,13 @@ class Pagination extends Middleware{
         ];
 
         // Prev Link
-        if ($page > 1){
+        if ($page > 1) {
             $prev = $params;
             $prev['p']--;
             $output['prev'] = $url . '?' . http_build_query($prev);
         }
         // Next Link
-        if ($page < $numberPages){
+        if ($page < $numberPages) {
             $next = $params;
             $next['p']++;
             $output['next'] = $url . '?' . http_build_query($next);

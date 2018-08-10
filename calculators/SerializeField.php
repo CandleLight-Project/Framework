@@ -10,7 +10,7 @@ class SerializeField extends Calculator{
     public function apply(){
         $values = $this->getValues();
         $field = $values[0];
-        if ($field && $this->fieldChanged($field)){
+        if ($field && $this->fieldChanged($field)) {
             $this->getModel()->{$this->getField()} = $this->serialize($this->getModel()->{$field});
         }
     }
