@@ -1,5 +1,5 @@
 {
-    "name": "jschaefer-io/candlelight-core",
+    "name": "candlelight/framework",
     "description": "CandleLight Core Framework",
     "type": "library",
     "authors": [
