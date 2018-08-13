@@ -1,15 +1,22 @@
 {
-    "name": "jsio/candlelight",
-    "description": "Headless API Generator",
+    "name": "jschaefer-io/candlelight-core",
+    "description": "CandleLight Core Framework",
+    "type": "library",
     "authors": [
         {
             "name": "Jannik Schäfer",
-            "email": "me@jschaefer.io"
+            "email": "me@jschaefer.io",
+            "homepage": "https://jschaefer.io/"
         }
     ],
     "require": {
         "php": "^7.1",
         "illuminate/database": "^5.6",
         "slim/slim": "^3.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "CandleLight\\": "src/"
+        }
     }
 }
