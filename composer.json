@@ -1,6 +1,7 @@
 {
     "name": "candlelight/framework",
     "description": "CandleLight Core Framework",
+    "license": "MIT",
     "type": "library",
     "authors": [
         {
