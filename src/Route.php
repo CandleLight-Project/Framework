@@ -20,6 +20,7 @@ abstract class Route{
     private $app;
     private $type;
     private $options;
+    private $attributes;
 
     /**
      * Route constructor.
@@ -31,6 +32,12 @@ abstract class Route{
         $this->app = $app;
         $this->type = $type;
         $this->options = $options;
+        if (isset($this->options['attributes'])){
+            $this->attributes = $this->options['attributes'];
+        }
+        else{
+            $this->attributes = [];
+        }
     }
 
     /**
@@ -72,5 +79,23 @@ abstract class Route{
      */
     public static function noRoute(){
         return new Error('No action specified for this route.');
+    }
+
+    /**
+     * Returns the given plugin values provided by the type.json
+     * @return array
+     */
+    public function getAttributes(): array{
+        return $this->attributes;
+    }
+
+    /**
+     * Merges the given attributes with the given default values
+     * and returns the result
+     * @param array $defaults default attribute values
+     * @return array
+     */
+    public function parseAttributes(array $defaults): array{
+        return array_replace($defaults, $this->getAttributes());
     }
 }

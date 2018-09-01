@@ -14,28 +14,42 @@ abstract class Model extends Eloquent{
     private $validations = [];
 
     /**
+     * Helper to build plugin data
+     * @param mixed $key  key or name
+     * @param mixed $data data or name
+     * @return array
+     */
+    private function buildPluginData($key, $data){
+        if (is_array($data)){
+            $name = $key;
+            $attributes = $data;
+        }
+        else{
+            $name = $data;
+            $attributes = [];
+        }
+        return [
+            'name' => $name,
+            'attributes' => $attributes
+        ];
+    }
+
+    /**
      * Applies the filters to the fields
      * @param App $cdl CDL Application instance
-     * @param \stdClass $settings field settings
+     * @param array $settings field settings
      */
-    public function applyFilters(App $cdl, \stdClass $settings): void{
-        foreach ($settings->fields as $field) {
-            if (!isset($field->filters)) {
+    public function applyFilters(App $cdl, array $settings): void{
+        foreach ($settings['fields'] as $field) {
+            if (!isset($field['filters'])) {
                 continue;
             }
-            foreach ($field->filters as $filter) {
-                if (!is_object($filter)) {
-                    $filter = [
-                        'name' => $filter,
-                        'values' => []
-                    ];
-                } else {
-                    $filter = (array)$filter;
-                }
-                if ($cdl->hasFilter($filter['name'])) {
-                    $filterObject = $cdl->getFilter($filter['name']);
+            foreach ($field['filters'] as $key => $filter) {
+                $data = $this->buildPluginData($key, $filter);
+                if ($cdl->hasFilter($data['name'])) {
+                    $filterObject = $cdl->getFilter($data['name']);
                     /* @var $filt Filter */
-                    $filt = new $filterObject($this, $field->name, $filter['values']);
+                    $filt = new $filterObject($this, $field['name'], $data['attributes']);
                     $filt->apply();
                 }
             }
@@ -45,26 +59,19 @@ abstract class Model extends Eloquent{
     /**
      * Applies the calculators to the fields
      * @param App $cdl CDL Application instance
-     * @param \stdClass $settings field settings
+     * @param array $settings field settings
      */
-    public function applyCalculators(App $cdl, \stdClass $settings): void{
-        foreach ($settings->fields as $field) {
-            if (!isset($field->calculations)) {
+    public function applyCalculators(App $cdl, array $settings): void{
+        foreach ($settings['fields'] as $field) {
+            if (!isset($field['calculations'])) {
                 continue;
             }
-            foreach ($field->calculations as $calculation) {
-                if (!is_object($calculation)) {
-                    $calculation = [
-                        'name' => $calculation,
-                        'values' => []
-                    ];
-                } else {
-                    $calculation = (array)$calculation;
-                }
-                if ($cdl->hasCalculator($calculation['name'])) {
-                    $calcObject = $cdl->getCalculator($calculation['name']);
+            foreach ($field['calculations'] as $key => $calculation) {
+                $data = $this->buildPluginData($key, $calculation);
+                if ($cdl->hasCalculator($data['name'])) {
+                    $calcObject = $cdl->getCalculator($data['name']);
                     /* @var $calc Calculator */
-                    $calc = new $calcObject($this, $field->name, $calculation['values']);
+                    $calc = new $calcObject($this, $field['name'], $data['attributes']);
                     $calc->apply();
                 }
             }
@@ -74,30 +81,21 @@ abstract class Model extends Eloquent{
     /**
      * Executes all validations for this model
      * @param App $cdl CDL application instance
-     * @param \stdClass $settings model settings
+     * @param array $settings model settings
      * @return bool true on error
      */
-    public function doValidation(App $cdl, \stdClass $settings): bool{
-        foreach ($settings->fields as $field) {
-            // Skip fields without validation
-            if (!isset($field->validation)) {
+    public function doValidation(App $cdl, array $settings): bool{
+        foreach ($settings['fields'] as $field) {
+            if (!isset($field['validation'])) {
                 continue;
             }
-            foreach ($field->validation as $validation) {
-                if (!is_object($validation)) {
-                    $validation = [
-                        'name' => $validation,
-                        'values' => []
-                    ];
-                } else {
-                    $validation = (array)$validation;
-                }
-                if ($cdl->hasValidation($validation['name'])) {
-                    $validationObject = $cdl->getValidation($validation['name']);
-                    array_push($this->validations, new $validationObject($this, $field->name, $validation['values']));
+            foreach ($field['validation'] as $key => $validation) {
+                $data = $this->buildPluginData($key, $validation);
+                if ($cdl->hasValidation($data['name'])) {
+                    $validationObject = $cdl->getValidation($data['name']);
+                    array_push($this->validations, new $validationObject($this, $field['name'], $data['attributes']));
                 }
             }
-
         }
         $error = false;
         foreach ($this->validations as $validation) {

@@ -28,11 +28,11 @@ class Database{
 
     /**
      * Adds a new connection to the database eloquent model
-     * @param \stdClass $settings database connection settings
+     * @param array $settings database connection settings
      * @param string $name the connection name
      */
-    public function addConnection(\stdClass $settings, string $name): void{
-        $this->capsule->addConnection((array)$settings, $name);
+    public function addConnection(array $settings, string $name): void{
+        $this->capsule->addConnection($settings, $name);
     }
 
 }

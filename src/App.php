@@ -11,9 +11,9 @@ use Slim\App as Slim;
 class App{
 
     private $db;
-    private $types = [];
     private $app;
 
+    private $types = [];
     private $validations = [];
     private $calculators = [];
     private $filters = [];
@@ -22,40 +22,26 @@ class App{
 
     /**
      * Prepares the database interaction
-     * @param Loader $loader
+     * @param array $connections
      */
-    public function initDb(Loader $loader): void{
-        require_once 'Database.php';
+    public function initDb(array $connections): void{
         $this->db = new Database();
-        foreach ($loader() as $name => $settings) {
+        foreach ($connections as $name => $settings) {
             $this->db->addConnection($settings, $name);
         }
     }
 
     /**
-     * Prepares the data-types
-     * @param MultiLoader $loader
-     */
-    public function initTypes(MultiLoader $loader): void{
-        require_once 'Type.php';
-        foreach ($loader() as $type) {
-            /* @var $type Loader */
-            $this->types[$type->getBasename('.json')] = new Type($type());
-        }
-    }
-
-    /**
      * Loads the main routing framework and builds the application routes
+     * @param bool $debug True if the system boots in debug mode
      */
-    public function load(): void{
-        $debug = false;
+    public function load(bool $debug = false): void{
         $this->app = new Slim([
             'settings' => [
                 'displayErrorDetails' => $debug
             ]
         ]);
         if (!$debug) {
-            require_once 'Error.php';
             Error::registerSystemErrors($this->app);
         }
         $this->buildRoutes();
@@ -87,7 +73,6 @@ class App{
     public function getTypes(): array{
         return $this->types;
     }
-
 
     /**
      * Adds a new validation option to the application
@@ -250,5 +235,23 @@ class App{
      */
     public function hasRoute(string $type, string $name): bool{
         return (isset($this->routes[$name]) && isset($this->routes[$name][$type]));
+    }
+
+    /**
+     * Add a content type to the CDL System
+     * @param array $type content type definition array
+     * @return void
+     */
+    public function addType(string $name, array $type): void{
+        $this->types[$name] = new Type($type);
+    }
+
+    /**
+     * Checks if a type with the given name is registered
+     * @param string $name type name to check
+     * @return bool
+     */
+    public function hasType(string $name): bool{
+        return isset($this->types[$name]);
     }
 }

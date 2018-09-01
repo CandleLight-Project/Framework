@@ -16,12 +16,12 @@ abstract class System{
 
     /**
      * Builds a clean route array from the given type settings
-     * @param \stdClass $settings
+     * @param array $settings
      * @return array the clean route array with the full route urls
      */
-    public static function getRoutesFromSettings(\stdClass $settings): array{
+    public static function getRoutesFromSettings(array $settings): array{
         $routes = [];
-        foreach ($settings->routing as $method => $urls) {
+        foreach ($settings['routing'] as $method => $urls) {
             if (!isset($routes[$method])) {
                 $routes[$method] = [];
             }
@@ -47,8 +47,8 @@ abstract class System{
                 $type = $type->getSettings();
                 $list = [
                     '@type' => $name,
-                    'title' => $type->title,
-                    'description' => $type->description
+                    'title' => $type['title'],
+                    'description' => $type['description']
                 ];
                 array_push($return, $list);
             }
@@ -61,7 +61,7 @@ abstract class System{
                 return new Error(sprintf("Type '%s' is not defined.", $args['type']));
             }
             $settings = $types[$args['type']]->getSettings();
-            $settings->routes = self::getRoutesFromSettings($settings);
+            $settings['routes'] = self::getRoutesFromSettings($settings);
             unset($settings->routing);
             return $settings;
         }));

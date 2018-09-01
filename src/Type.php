@@ -11,16 +11,16 @@ use Slim\App as Slim;
  */
 class Type{
 
-    /* @var \stdClass */
+    /* @var array */
     private $settings;
     /* @var Model */
     private $model;
 
     /**
      * Builds up the type from the given settings object
-     * @param \stdClass $settings settings object provided by the type.json
+     * @param array $settings content type definition array
      */
-    public function __construct(\stdClass $settings){
+    public function __construct(array $settings){
         $this->settings = $settings;
         $this->model = $this->buildModel();
     }
@@ -43,11 +43,11 @@ class Type{
 
             private function setSettings(): void{
                 $settings = self::$cdl_settings;
-                $this->table = $settings->table;
-                $this->connection = $settings->connection;
+                $this->table = $settings['table'];
+                $this->connection = $settings['connection'];
             }
 
-            public static function applySettings(\stdClass $settings): void{
+            public static function applySettings(array $settings): void{
                 self::$cdl_settings = $settings;
             }
 
@@ -74,9 +74,9 @@ class Type{
 
     /**
      * Returns the types settings object
-     * @return \stdClass
+     * @return array
      */
-    public function getSettings(): \stdClass{
+    public function getSettings(): array{
         return $this->settings;
     }
 
