@@ -254,4 +254,13 @@ class App{
     public function hasType(string $name): bool{
         return isset($this->types[$name]);
     }
+
+    /**
+     * Returns the Type with the given
+     * @param string $name
+     * @return Type
+     */
+    public function getType(string $name): Type{
+        return $this->types[$name];
+    }
 }

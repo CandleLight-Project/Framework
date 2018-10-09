@@ -9,22 +9,21 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * Generic Model for dynamic types
  * @package CandleLight
  */
-abstract class Model extends Eloquent{
+class Model extends Eloquent{
 
     private $validations = [];
 
     /**
      * Helper to build plugin data
-     * @param mixed $key  key or name
+     * @param mixed $key key or name
      * @param mixed $data data or name
      * @return array
      */
     private function buildPluginData($key, $data){
-        if (is_array($data)){
+        if (is_array($data)) {
             $name = $key;
             $attributes = $data;
-        }
-        else{
+        } else {
             $name = $data;
             $attributes = [];
         }
@@ -124,5 +123,16 @@ abstract class Model extends Eloquent{
         return $fields;
     }
 
-
+    /**
+     * Propagates the table settings to the children
+     * @param array $attributes
+     * @param bool $exists
+     * @return Eloquent
+     */
+    public function newInstance($attributes = [], $exists = false): Model{
+        /** @var Model $model */
+        $model = parent::newInstance($attributes, $exists);
+        $model->setTable($this->getTable());
+        return $model;
+    }
 }
