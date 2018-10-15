@@ -61,9 +61,19 @@ abstract class System{
                 return new Error(sprintf("Type '%s' is not defined.", $args['type']));
             }
             $settings = $types[$args['type']]->getSettings();
-            $settings['routes'] = self::getRoutesFromSettings($settings);
-            unset($settings->routing);
-            return $settings;
+            $routes = [];
+            foreach ($settings['routing'] as $method => $routingList) {
+                $routes[$method] = array_map(function($item){
+                    return $item['url'];
+                }, $routingList);
+            }
+            return [
+                'type' => $args['type'],
+                'title' => $settings['title'],
+                'description' => $settings['description'],
+                'routes' => $routes,
+                'data' => (isset($settings['data'])) ? $settings['data'] : [],
+            ];
         }));
     }
 
