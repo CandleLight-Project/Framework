@@ -263,4 +263,12 @@ class App{
     public function getType(string $name): Type{
         return $this->types[$name];
     }
+
+    /**
+     * Returns the applications Database Object
+     * @return Database
+     */
+    public function getDb(): Database{
+        return $this->db;
+    }
 }
