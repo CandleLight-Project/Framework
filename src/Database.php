@@ -40,7 +40,7 @@ class Database{
      * Returns the databases schema-builder
      * @return Builder
      */
-    public function getManager(): Builder{
+    public function getBuilder(): Builder{
         return $this->capsule::schema();
     }
 
