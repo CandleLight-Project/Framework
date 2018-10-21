@@ -29,5 +29,12 @@ abstract class Middleware{
         return new $middleware;
     }
 
+    /**
+     * Applies the Middleware to the current Request
+     * @param Request $request Request Object
+     * @param Response $response Response Object
+     * @param callable $next calls the next middleware
+     * @return Response
+     */
     abstract function apply(Request $request, Response $response, callable $next): Response;
 }

@@ -19,5 +19,8 @@ abstract class Calculator extends PlugIn{
         return $old != $current;
     }
 
-    abstract public function apply();
+    /**
+     * Applies the calculator to the current field
+     */
+    abstract public function apply(): void;
 }
