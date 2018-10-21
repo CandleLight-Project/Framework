@@ -4,6 +4,7 @@
 namespace CandleLight;
 
 use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Schema\Builder;
 
 /**
  * Main Database interaction API
@@ -33,6 +34,14 @@ class Database{
      */
     public function addConnection(array $settings, string $name): void{
         $this->capsule->addConnection($settings, $name);
+    }
+
+    /**
+     * Returns the databases schema-builder
+     * @return Builder
+     */
+    public function getManager(): Builder{
+        return $this->capsule::schema();
     }
 
 }
