@@ -19,6 +19,7 @@ class App{
     private $filters = [];
     private $middleware = [];
     private $routes = [];
+    private $migrations = [];
 
     /**
      * Prepares the database interaction
@@ -262,6 +263,42 @@ class App{
      */
     public function getType(string $name): Type{
         return $this->types[$name];
+    }
+
+    /**
+     * Adds a new Migration option to the application
+     * @param string $path Migration File-Path
+     * @param string $migrations Migration class name
+     */
+    public function addMigration(string $path, Migration $migrations): void{
+        $name = basename($path);
+        $this->migrations[$name] = $migrations;
+    }
+
+    /**
+     * Returns the classname of the given Migration option
+     * @param string $name Migration name
+     * @return string Migration class name
+     */
+    public function getMigration(string $name): Migration{
+        return $this->migrations[basename($name)];
+    }
+
+    /**
+     * Returns the current list of all Migrations
+     * @return Migration[]
+     */
+    public function getMigrations(): array{
+        return $this->migrations;
+    }
+
+    /**
+     * Checks if the Migration with the given name exists
+     * @param string $name the Migration name
+     * @return bool
+     */
+    public function hasMigration(string $name): bool{
+        return isset($this->migrations[$name]);
     }
 
     /**

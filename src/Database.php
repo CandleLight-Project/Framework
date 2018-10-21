@@ -38,10 +38,11 @@ class Database{
 
     /**
      * Returns the databases schema-builder
+     * @param string $connection Connection name
      * @return Builder
      */
-    public function getBuilder(): Builder{
-        return $this->capsule::schema();
+    public function getBuilder(string $connection = null): Builder{
+        return $this->capsule::schema($connection);
     }
 
 }
