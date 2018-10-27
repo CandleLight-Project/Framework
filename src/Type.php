@@ -1,6 +1,5 @@
 <?php
 
-
 namespace CandleLight;
 
 use Slim\App as Slim;
@@ -31,8 +30,8 @@ class Type{
      */
     private function buildModel(): Model{
         $class = new Model();
-        $class->setTable($this->settings['table']);
-        $class->setConnection($this->settings['connection']);
+        $class->setTypeSettings($this->settings);
+        $class->applyTypeSettings();
         return $class;
     }
 
@@ -53,7 +52,7 @@ class Type{
      * @return Model
      */
     public function __invoke(array $attributes = [], bool $exists = false): Model{
-        return $this->new();
+        return $this->new($attributes, $exists);
     }
 
     /**

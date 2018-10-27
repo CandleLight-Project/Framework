@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class Model extends Eloquent{
 
     private $validations = [];
+    private $typeSettings;
 
     /**
      * Helper to build plugin data
@@ -36,9 +37,9 @@ class Model extends Eloquent{
     /**
      * Applies the filters to the fields
      * @param App $cdl CDL Application instance
-     * @param array $settings field settings
      */
-    public function applyFilters(App $cdl, array $settings): void{
+    public function applyFilters(App $cdl): void{
+        $settings = $this->getTypeSettings();
         foreach ($settings['fields'] as $field) {
             if (!isset($field['filters'])) {
                 continue;
@@ -58,9 +59,9 @@ class Model extends Eloquent{
     /**
      * Applies the calculators to the fields
      * @param App $cdl CDL Application instance
-     * @param array $settings field settings
      */
-    public function applyCalculators(App $cdl, array $settings): void{
+    public function applyCalculators(App $cdl): void{
+        $settings = $this->getTypeSettings();
         foreach ($settings['fields'] as $field) {
             if (!isset($field['calculations'])) {
                 continue;
@@ -80,10 +81,10 @@ class Model extends Eloquent{
     /**
      * Executes all validations for this model
      * @param App $cdl CDL application instance
-     * @param array $settings model settings
      * @return bool true on error
      */
-    public function doValidation(App $cdl, array $settings): bool{
+    public function doValidation(App $cdl): bool{
+        $settings = $this->getTypeSettings();
         foreach ($settings['fields'] as $field) {
             if (!isset($field['validation'])) {
                 continue;
@@ -132,7 +133,33 @@ class Model extends Eloquent{
     public function newInstance($attributes = [], $exists = false): Model{
         /** @var Model $model */
         $model = parent::newInstance($attributes, $exists);
-        $model->setTable($this->getTable());
+        $model->setTypeSettings($this->getTypeSettings());
+        $model->applyTypeSettings();
         return $model;
+    }
+
+    /**
+     * Applies the type-settings to the current model
+     */
+    public function applyTypeSettings(): void{
+        $settings = $this->getTypeSettings();
+        $this->setTable($settings['table']);
+        $this->setConnection($settings['connection']);
+    }
+
+    /**
+     * Pushes the type-settings into the current Model
+     * @param array $settings Type settings array
+     */
+    public function setTypeSettings(array $settings): void{
+        $this->typeSettings = $settings;
+    }
+
+    /**
+     * Returns the associated type-settings array
+     * @return array Type settings array
+     */
+    public function getTypeSettings(): array{
+        return $this->typeSettings;
     }
 }
