@@ -52,8 +52,8 @@ abstract class Migration{
      * Kicks of the Migration-Up Process
      */
     public function execUp(string $name): void{
-        $this->up();
         DB::connection('default')->table('migrations')->insert(['name' => $name]);
+        $this->up();
     }
 
     /**
