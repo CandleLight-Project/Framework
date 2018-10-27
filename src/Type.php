@@ -17,22 +17,12 @@ class Type{
 
     /**
      * Builds up the type from the given settings object
-     * @param array $settings content type definition array
+     * @param string $model Type-Model classname string
      */
-    public function __construct(array $settings){
-        $this->settings = $settings;
-        $this->model = $this->buildModel();
-    }
-
-    /**
-     * Generates the types model class
-     * @return Model instance of the types model
-     */
-    private function buildModel(): Model{
-        $class = new Model();
-        $class->setTypeSettings($this->settings);
-        $class->applyTypeSettings();
-        return $class;
+    public function __construct(string $model){
+        /** @var Model $model */
+        $this->settings = ($model)::getTypeSettings();
+        $this->model = new $model();
     }
 
     /**

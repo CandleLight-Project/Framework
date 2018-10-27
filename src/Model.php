@@ -9,10 +9,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * Generic Model for dynamic types
  * @package CandleLight
  */
-class Model extends Eloquent{
+abstract class Model extends Eloquent{
 
     private $validations = [];
-    private $typeSettings;
 
     /**
      * Helper to build plugin data
@@ -20,7 +19,7 @@ class Model extends Eloquent{
      * @param mixed $data data or name
      * @return array
      */
-    private function buildPluginData($key, $data){
+    private static function buildPluginData($key, $data){
         if (is_array($data)) {
             $name = $key;
             $attributes = $data;
@@ -45,7 +44,7 @@ class Model extends Eloquent{
                 continue;
             }
             foreach ($field['filters'] as $key => $filter) {
-                $data = $this->buildPluginData($key, $filter);
+                $data = self::buildPluginData($key, $filter);
                 if ($cdl->hasFilter($data['name'])) {
                     $filterObject = $cdl->getFilter($data['name']);
                     /* @var $filt Filter */
@@ -67,7 +66,7 @@ class Model extends Eloquent{
                 continue;
             }
             foreach ($field['calculations'] as $key => $calculation) {
-                $data = $this->buildPluginData($key, $calculation);
+                $data = self::buildPluginData($key, $calculation);
                 if ($cdl->hasCalculator($data['name'])) {
                     $calcObject = $cdl->getCalculator($data['name']);
                     /* @var $calc Calculator */
@@ -90,7 +89,7 @@ class Model extends Eloquent{
                 continue;
             }
             foreach ($field['validation'] as $key => $validation) {
-                $data = $this->buildPluginData($key, $validation);
+                $data = self::buildPluginData($key, $validation);
                 if ($cdl->hasValidation($data['name'])) {
                     $validationObject = $cdl->getValidation($data['name']);
                     array_push($this->validations, new $validationObject($this, $field['name'], $data['attributes']));
@@ -128,12 +127,11 @@ class Model extends Eloquent{
      * Propagates the table settings to the children
      * @param array $attributes
      * @param bool $exists
-     * @return Eloquent
+     * @return Model
      */
     public function newInstance($attributes = [], $exists = false): Model{
         /** @var Model $model */
         $model = parent::newInstance($attributes, $exists);
-        $model->setTypeSettings($this->getTypeSettings());
         $model->applyTypeSettings();
         return $model;
     }
@@ -148,18 +146,8 @@ class Model extends Eloquent{
     }
 
     /**
-     * Pushes the type-settings into the current Model
-     * @param array $settings Type settings array
-     */
-    public function setTypeSettings(array $settings): void{
-        $this->typeSettings = $settings;
-    }
-
-    /**
      * Returns the associated type-settings array
      * @return array Type settings array
      */
-    public function getTypeSettings(): array{
-        return $this->typeSettings;
-    }
+    abstract public static function getTypeSettings(): array;
 }

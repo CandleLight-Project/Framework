@@ -240,10 +240,10 @@ class App{
 
     /**
      * Add a content type to the CDL System
-     * @param array $type content type definition array
+     * @param string $type classname of the new type-model
      * @return void
      */
-    public function addType(string $name, array $type): void{
+    public function addType(string $name, string $type): void{
         $this->types[$name] = new Type($type);
     }
 
